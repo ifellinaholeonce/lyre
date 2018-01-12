@@ -33,6 +33,18 @@ function getVideosByArtistTitle(artist, title) {
     });
 }
 
+//Initiate the host - this assigns them id 1 so that only they render the video and other content
+const initHost = (host) => {
+  let message = {
+    type: "initHost",
+    content: 1
+  }
+  host.host = true
+  console.log(host.host)
+  console.log("sending", message)
+  host.send(JSON.stringify(message))
+}
+
 //This will broadcast messages to everyone connected
 wss.broadcast = (message) => {
   wss.clients.forEach((client) => {
@@ -48,7 +60,11 @@ wss.broadcast = (message) => {
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected');
+  if (wss.clients.size === 1) {
+    initHost(ws);
+  }
   ws.on('message', function incoming(message) {
+    console.log(ws.host)
     message = JSON.parse(message); //immedaitely parse the data to json
     console.log("title", message.title);
     console.log("artist", message.artist);

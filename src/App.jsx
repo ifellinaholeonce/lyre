@@ -23,13 +23,21 @@ class App extends Component {
       console.log("Connected to server as:", this.state.currentUser);
     };
     this.connection.onmessage = (event) => {
-      console.log("receiving message");
-      let newSong = JSON.parse(event.data);
-      let { queue } = this.state;
-      queue.push(newSong);
-      this.setState({
-        queue
-      })
+      let message = JSON.parse(event.data);
+      switch (message.type) {
+        case "initHost":
+          this.setState({
+            host: message.content
+          })
+          break;
+        default:
+        let { queue } = this.state;
+        queue.push(message);
+        this.setState({
+          queue
+        })
+
+      }
     }
   }
 
