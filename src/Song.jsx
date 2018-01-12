@@ -3,6 +3,7 @@ import Song from './Song.jsx'
 
 
 class CurrentPlaying extends Component {
+  
   like = (e) => {
     this.props.like(this.props.song)
     e.target.setAttribute('disabled', 'disabled');

@@ -13,17 +13,23 @@ class App extends Component {
     }
   }
 
+  sortQueue = () => {
+    //sort queue by score in descending order
+    let { queue } = this.state;
+    queue.sort((a,b) => {
+      return b.score - a.score
+    })
+    console.log(queue)
+    this.setState({queue})
+  }
+
   nextSong = () => {
     //TAKE SONG WITH MOST VOTES FROM QUEUE AND SET TO CURRENT SONG
     //Get song with most votes from queue
     let { queue } = this.state;
-    let nextSong = queue[0];
-    queue.forEach((song) => {
-      if (song.score > nextSong.score) {
-        nextSong = song;
-      }
-      this.setState({currentSong: nextSong})
-    })
+    let nextSong = queue.shift();
+
+    this.setState({currentSong: nextSong})
   }
 
 //VOTING FOR SONGS - Might want to change to a switch case?
@@ -39,9 +45,10 @@ class App extends Component {
     } else {
       this.state.queue.forEach((track, i) => {
         if (title === track.title) {
-          let queue = this.state.queue;
+          let { queue } = this.state;
           let newScore = track.score + 1;
           queue[i].score = newScore;
+          this.sortQueue();
           this.setState({
             queue
           })
@@ -62,9 +69,10 @@ class App extends Component {
     } else {
       this.state.queue.forEach((track, i) => {
         if (title === track.title) {
-          let queue = this.state.queue;
+          let { queue } = this.state;
           let newScore = track.score - 1;
           queue[i].score = newScore;
+          this.sortQueue();
           this.setState({
             queue
           })
