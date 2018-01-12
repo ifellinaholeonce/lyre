@@ -1,6 +1,7 @@
 const express = require('express');
 const SocketServer = require('ws').Server;
 const fetch = require("node-fetch");
+const dotenv = require("dotenv").config();
 
 // Set the port to 3001
 const PORT = 3001;
@@ -26,7 +27,7 @@ wss.on('connection', (ws) => {
 
 // Function returns a promise that resolves to the videoId
 function getVideosByArtistTitle(artist, title) {
-  const API_KEY = "AIzaSyDVD-ryAY3Ug1UZXllgx3XHZQo6s0zxtJw";
+  const API_KEY = process.env.API_KEY;
   let artistSerial = artist.split(" ").join("+");
   let titleSerial = title.split(" ").join("+");
   let response = "";
@@ -38,8 +39,9 @@ function getVideosByArtistTitle(artist, title) {
         return res.json();
     }).then(function(body) {
       let videoId = body.items[0].id.videoId;
-        console.log(videoId);
-        return videoId;
+      console.log(body);
+      console.log(videoId);
+      return videoId;
     });
 }
 
