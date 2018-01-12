@@ -1,5 +1,6 @@
 const express = require('express');
 const SocketServer = require('ws').Server;
+const fetch = require("node-fetch");
 
 // Set the port to 3001
 const PORT = 3001;
@@ -22,3 +23,27 @@ wss.on('connection', (ws) => {
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => console.log('Client disconnected'));
 });
+
+// Function returns a promise that resolves to the videoId
+function getVideosByArtistTitle(artist, title) {
+  const API_KEY = "AIzaSyDVD-ryAY3Ug1UZXllgx3XHZQo6s0zxtJw";
+  let artistSerial = artist.split(" ").join("+");
+  let titleSerial = title.split(" ").join("+");
+  let response = "";
+
+  let path = `https://www.googleapis.com/youtube/v3/search?maxResults=1&part=snippet&q=${artistSerial}+${titleSerial}&key=${API_KEY}`;
+
+  fetch(path)
+    .then(function(res) {
+        return res.json();
+    }).then(function(body) {
+      let videoId = body.items[0].id.videoId;
+        console.log(videoId);
+        return videoId;
+    });
+}
+
+let artist = "Katy Perry";
+let title = "Fireworks";
+
+getVideosByArtistTitle(artist, title);
