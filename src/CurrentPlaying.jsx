@@ -9,7 +9,8 @@ class CurrentPlaying extends Component {
       <div>
         <h1>Currently Playing</h1>
         <Song like={this.props.like} skip={this.props.skip} song={this.props.currentSong} />
-        <Player song={this.props.currentSong} nextSong={this.props.nextSong}/>
+        {this.props.host === 1 && //Only render the YouTube player for the host.
+        <Player song={this.props.currentSong} nextSong={this.props.nextSong}/> }
         <h2>Up Next</h2>
         {this.props.queue.map((song) => {
           return (

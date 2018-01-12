@@ -8,6 +8,7 @@ class App extends Component {
     super(props);
 
     this.state = {
+      host: 0,
       currentSong: {title: "Metanoya", artist: "MGMT", score: 3, videoId: "2g811Eo7K8U"},
       queue: [
         {title: "Superman", artist: "Goldfinger", score: 1, videoId: "WEkSYw3o5is"},
@@ -129,6 +130,7 @@ class App extends Component {
     return (
       <div>
         <CurrentPlaying
+          host={this.state.host}
           like={this.like}
           skip={this.skip}
           currentSong={this.state.currentSong}
