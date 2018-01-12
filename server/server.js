@@ -16,7 +16,7 @@ const wss = new SocketServer.Server({ server });
 
 // Function returns a promise that resolves to the videoId
 function getVideosByArtistTitle(artist, title) {
-  const API_KEY = "AIzaSyDVD-ryAY3Ug1UZXllgx3XHZQo6s0zxtJw";
+  //const API_KEY = "process.env.API_KEY";
   let artistSerial = artist.split(" ").join("+");
   let titleSerial = title.split(" ").join("+");
   let response = "";
