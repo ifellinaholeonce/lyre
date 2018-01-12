@@ -16,6 +16,23 @@ class App extends Component {
     }
   }
 
+  componentDidMount = () => {
+    //Connect to server once the component mounts
+    this.connection = new WebSocket("ws://127.0.0.1:3001");
+    this.connection.onopen = () => {
+      console.log("Connected to server as:", this.state.currentUser);
+    };
+    this.connection.onmessage = (event) => {
+      console.log("receiving message");
+      let newSong = JSON.parse(event.data);
+      let { queue } = this.state;
+      queue.push(newSong);
+      this.setState({
+        queue
+      })
+    }
+  }
+
   sortQueue = () => {
     //sort queue by score in descending order
     let { queue } = this.state;
@@ -96,11 +113,8 @@ class App extends Component {
       artist,
       score: 1
     }
-    let queue = this.state.queue;
-    queue.push(newSong);
-    this.setState({
-      queue
-    })
+    console.log("Send Message to server")
+    this.connection.send(JSON.stringify(newSong))
   }
 
   render() {
