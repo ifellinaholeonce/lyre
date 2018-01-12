@@ -9,7 +9,10 @@ class App extends Component {
 
     this.state = {
       currentSong: {title: "Metanoya", artist: "MGMT", score: 3, videoId: "2g811Eo7K8U"},
-      queue: [{title: "Superman", artist: "Goldfinger", score: 1, videoId: "WEkSYw3o5is"}, {title: "The Hands That Be", artist: "Street Light Manifesto", score: 1, videoId: "_teB4ujKzdE"}]
+      queue: [
+        {title: "Superman", artist: "Goldfinger", score: 1, videoId: "WEkSYw3o5is"},
+        {title: "The Hands That Be", artist: "Street Light Manifesto", score: 1, videoId: "_teB4ujKzdE"}
+      ]
     }
   }
 
@@ -19,7 +22,6 @@ class App extends Component {
     queue.sort((a,b) => {
       return b.score - a.score
     })
-    console.log(queue)
     this.setState({queue})
   }
 
@@ -38,7 +40,8 @@ class App extends Component {
     if (title === this.state.currentSong.title) {
       let newScore = this.state.currentSong.score + 1;
       let { currentSong } = this.state;
-      currentSong.score = newScore
+      currentSong.score = newScore;
+      currentSong.liked = true;
       this.setState({
         currentSong
       });
@@ -48,11 +51,12 @@ class App extends Component {
           let { queue } = this.state;
           let newScore = track.score + 1;
           queue[i].score = newScore;
-          this.sortQueue();
-          this.setState({
-            queue
-          })
+          queue[i].liked = true;
         }
+      })
+      this.sortQueue();
+      this.setState({
+        queue
       })
     }
   }
@@ -62,22 +66,24 @@ class App extends Component {
     if (title === this.state.currentSong.title) {
       let newScore = this.state.currentSong.score - 1;
       let { currentSong } = this.state;
-      currentSong.score = newScore
+      currentSong.score = newScore;
+      currentSong.liked = false;
       this.setState({
         currentSong
       });
     } else {
-      this.state.queue.forEach((track, i) => {
+      let { queue } = this.state;
+      queue.forEach((track, i) => {
         if (title === track.title) {
-          let { queue } = this.state;
           let newScore = track.score - 1;
           queue[i].score = newScore;
-          this.sortQueue();
-          this.setState({
-            queue
-          })
+          queue[i].liked = false;
         }
-      })
+      });
+      this.sortQueue();
+      this.setState({
+        queue
+      });
     }
   }
 
