@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import CurrentPlaying from './CurrentPlaying.jsx';
 import Bar from './Bar.jsx';
+import Queue from './Queue.jsx';
+
 
 class App extends Component {
 
@@ -11,8 +13,8 @@ class App extends Component {
       host: 0,
       currentSong: {title: "Metanoya", artist: "MGMT", score: 3, videoId: "2g811Eo7K8U"},
       queue: [
-        {title: "Superman", artist: "Goldfinger", score: 1, videoId: "WEkSYw3o5is"},
-        {title: "The Hands That Be", artist: "Street Light Manifesto", score: 1, videoId: "_teB4ujKzdE"}
+        {id: 1, title: "Superman", artist: "Goldfinger", score: 1, videoId: "WEkSYw3o5is"},
+        {id: 2, title: "The Hands That Be", artist: "Street Light Manifesto", score: 1, videoId: "_teB4ujKzdE"}
       ]
     }
   }
@@ -136,6 +138,11 @@ class App extends Component {
           currentSong={this.state.currentSong}
           queue={this.state.queue}
           nextSong={this.nextSong}
+        />
+        <Queue
+          queue={this.state.queue}
+          like={this.like}
+          skip={this.skip}
         />
         <Bar
           makeRequest={this.makeRequest}
