@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import CurrentPlaying from './CurrentPlaying.jsx';
 import Bar from './Bar.jsx';
 import Queue from './Queue.jsx';
+import NavBar from './NavBar.jsx'
 
 
 class App extends Component {
@@ -131,6 +132,7 @@ class App extends Component {
   render() {
     return (
       <div>
+        <NavBar />
         <CurrentPlaying
           host={this.state.host}
           like={this.like}

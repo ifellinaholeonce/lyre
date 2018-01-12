@@ -14,11 +14,11 @@ class CurrentPlaying extends Component {
   render() {
     return (
       <div>
-        <div>
+        <div className="song-title">
           <span>Title:</span>
           <span>{this.props.song.title}</span>
         </div>
-        <div>
+        <div className="song-artist">
           <span>Artist:</span>
           <span>{this.props.song.artist}</span>
         </div>

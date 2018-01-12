@@ -1,3 +1,98 @@
-h1 {
-  color: tomato;
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css");
+
+body {
+  background: skyblue;
+  color: black;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  margin: 70px 0;
+}
+
+.requestbar {
+  background: complement(darkblue);
+  border-top: 1px solid black;
+  bottom: 0;
+  display: flex;
+  left: 0;
+  padding: 5px;
+  position: fixed;
+  right: 0;
+}
+
+.requestbar-artist,
+.requestbar-title {
+  border: 1px solid black;
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  margin: 5px;
+  padding: 0 9px;
+}
+
+.requestbar-artist {
+  flex: 8;
+}
+
+.requestbar-title {
+  flex: 2;
+}
+
+.currentplaying {
+  display: block;
+  text-align: center;
+  padding: 5px;
+}
+
+.queue {
+  display: block;
+  text-align: center;
+  padding: 5px;
+}
+
+.song-title,
+.song-artist {
+  overflow: hidden;
+  margin: 5px;
+  padding: 0 10px;
+}
+
+.song-title {
+  flex: 8;
+}
+
+.song-artist {
+  flex: 2;
+  font-weight: 700;
+}
+
+.navbar {
+  background: darkblue;
+  border-bottom: 1px solid black;
+  color: white;
+  font-family:sans-serif;
+  height: 60px;
+  left: 0;
+  padding: 0 10px;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+.navbar-brand {
+  color: inherit;
+  display: block;
+  float: left;
+  font-weight: 700;
+  font-size: 28px;
+  height: 60px;
+  line-height: 60px;
+  padding: 0 10px;
+  text-decoration: none;
+}
+
+.user-count {
+  @extend .navbar-brand;
+  font-weight: 300;
+  float: right;
 }
