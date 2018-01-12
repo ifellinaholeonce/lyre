@@ -1,5 +1,5 @@
 const express = require('express');
-const SocketServer = require('ws').Server;
+const SocketServer = require('ws');
 const fetch = require("node-fetch");
 
 // Set the port to 3001
@@ -12,17 +12,7 @@ const server = express()
   .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on ${ PORT }`));
 
 // Create the WebSockets server
-const wss = new SocketServer({ server });
-
-// Set up a callback that will run when a client connects to the server
-// When a client connects they are assigned a socket, represented by
-// the ws parameter in the callback.
-wss.on('connection', (ws) => {
-  console.log('Client connected');
-
-  // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
-});
+const wss = new SocketServer.Server({ server });
 
 // Function returns a promise that resolves to the videoId
 function getVideosByArtistTitle(artist, title) {
@@ -33,7 +23,7 @@ function getVideosByArtistTitle(artist, title) {
 
   let path = `https://www.googleapis.com/youtube/v3/search?maxResults=1&part=snippet&q=${artistSerial}+${titleSerial}&key=${API_KEY}`;
 
-  fetch(path)
+  return fetch(path)
     .then(function(res) {
         return res.json();
     }).then(function(body) {
@@ -43,7 +33,35 @@ function getVideosByArtistTitle(artist, title) {
     });
 }
 
-let artist = "Katy Perry";
-let title = "Fireworks";
+//This will broadcast messages to everyone connected
+wss.broadcast = (message) => {
+  wss.clients.forEach((client) => {
+    if (client.readyState === SocketServer.OPEN){ //check that the websocket connection is open
+      data = JSON.stringify(message); //stringify the data
+      client.send(data);
+      console.log(data);
+    }
+  })
+}
+// Set up a callback that will run when a client connects to the server
+// When a client connects they are assigned a socket, represented by
+// the ws parameter in the callback.
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+  ws.on('message', function incoming(message) {
+    message = JSON.parse(message); //immedaitely parse the data to json
+    console.log("title", message.title);
+    console.log("artist", message.artist);
+    getVideosByArtistTitle(message.title, message.artist).then((id) => {
+        message.videoId = id;
+        console.log(message);
+        wss.broadcast(message);
+    });
+  })
 
-getVideosByArtistTitle(artist, title);
+  ws.on('error', (error) => {
+    console.log(error);
+  })
+  // Set up a callback for when a client closes the socket. This usually means they closed their browser.
+  ws.on('close', () => console.log('Client disconnected'));
+});
