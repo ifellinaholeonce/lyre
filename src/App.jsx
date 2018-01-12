@@ -8,11 +8,25 @@ class App extends Component {
     super(props);
 
     this.state = {
-      currentSong: {title: "Metanoya", artist: "MGMT", score: 3},
-      queue: [{title: "Superman", artist: "Goldfinger", score: 1}, {title: "The Hands That Be", artist: "Street Light Manifesto", score: 1}]
+      currentSong: {title: "Metanoya", artist: "MGMT", score: 3, videoId: "2g811Eo7K8U"},
+      queue: [{title: "Superman", artist: "Goldfinger", score: 1, videoId: "WEkSYw3o5is"}, {title: "The Hands That Be", artist: "Street Light Manifesto", score: 1, videoId: "_teB4ujKzdE"}]
     }
   }
 
+  nextSong = () => {
+    //TAKE SONG WITH MOST VOTES FROM QUEUE AND SET TO CURRENT SONG
+    //Get song with most votes from queue
+    let { queue } = this.state;
+    let nextSong = queue[0];
+    queue.forEach((song) => {
+      if (song.score > nextSong.score) {
+        nextSong = song;
+      }
+      this.setState({currentSong: nextSong})
+    })
+  }
+
+//VOTING FOR SONGS - Might want to change to a switch case?
   like = (song) => {
     let { title } = song;
     if (title === this.state.currentSong.title) {
@@ -83,6 +97,7 @@ class App extends Component {
           skip={this.skip}
           currentSong={this.state.currentSong}
           queue={this.state.queue}
+          nextSong={this.nextSong}
         />
         <Bar
           makeRequest={this.makeRequest}

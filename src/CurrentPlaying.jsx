@@ -9,7 +9,7 @@ class CurrentPlaying extends Component {
       <div>
         <h1>Currently Playing</h1>
         <Song like={this.props.like} skip={this.props.skip} song={this.props.currentSong} />
-        <Player />
+        <Player song={this.props.currentSong} nextSong={this.props.nextSong}/>
         <h2>Up Next</h2>
         {this.props.queue.map((song) => {
           return (

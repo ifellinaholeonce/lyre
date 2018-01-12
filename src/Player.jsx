@@ -1,17 +1,23 @@
 import React, {Component} from 'react';
+import YouTube from 'react-youtube';
 
 class Player extends Component {
-  render() {
-    return (
-      <form  onSubmit={this.props.makeRequest}>
-        <label htmlFor="title">Title:</label>
-        <input name="title" type="text" placeholder="Title" />
-        <label htmlFor="artist">Artist:</label>
-        <input name="artist" type="text" placeholder="Artist" />
-        <input type="submit" value="Request"/>
-      </form>
-    );
-  }
 
+  render() {
+    const opts = {
+      height: '390',
+      width: '640',
+      playerVars: { // https://developers.google.com/youtube/player_parameters
+        autoplay: 1
+      }
+    };
+    {console.log("#########RERENDER######")}
+  return (
+    <YouTube
+      videoId={this.props.song.videoId}
+      opts={opts}
+      onEnd={this.props.nextSong}
+    />
+  );}
 }
 export default Player;
