@@ -12,11 +12,9 @@ class App extends Component {
 
     this.state = {
       host: 0,
+      room_id: "",
       currentSong: {title: "Metanoya", artist: "MGMT", score: 3, videoId: "2g811Eo7K8U"},
-      queue: [
-        {id: 1, title: "Superman", artist: "Goldfinger", score: 1, videoId: "WEkSYw3o5is"},
-        {id: 2, title: "The Hands That Be", artist: "Street Light Manifesto", score: 1, videoId: "_teB4ujKzdE"}
-      ]
+      queue: []
     }
   }
 
@@ -35,13 +33,18 @@ class App extends Component {
             room_id: message.room_id
           })
           break;
+        case "receivingRequest":
+          this.setState({
+            queue: message.queue
+          })
+          break;
+        case "receivingSongChange":
+          this.setState({
+            currentSong: message.currentSong,
+            queue: message.queue
+          })
         default:
-        let { queue } = this.state;
-        queue.push(message);
-        this.setState({
-          queue
-        })
-
+          console.log("Unknown message")
       }
     }
   }
@@ -61,7 +64,13 @@ class App extends Component {
     let { queue } = this.state;
     let nextSong = queue.shift();
 
-    this.setState({currentSong: nextSong})
+    let message = {
+      type: "incomingSongChange",
+      room_id: this.state.room_id,
+    }
+    if (this.state.host) {
+      this.connection.send(JSON.stringify(message))
+    }
   }
 
 //VOTING FOR SONGS - Might want to change to a switch case?
@@ -122,11 +131,12 @@ class App extends Component {
     let title = e.target.title.value;
     let artist = e.target.artist.value;
     const newSong = {
+      type: "incomingRequest",
       title,
       artist,
-      score: 1
+      score: 1,
+      room_id: this.state.room_id
     }
-    console.log("Send Message to server")
     this.connection.send(JSON.stringify(newSong))
   }
 

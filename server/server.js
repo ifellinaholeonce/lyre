@@ -42,7 +42,7 @@ const rooms = [];
 //Initiate a new room
 const initRoom = (host) => {
   const room = {
-    id: 1,
+    id: 1, //muse uuidv4 to give id numbers
     host,
     guests: [],
     currentSong: {},
@@ -65,6 +65,16 @@ const initHost = (host) => {
   host.send(JSON.stringify(message))
 }
 
+const lookupRoom = (lookupId) => {
+  let result = {}
+  rooms.forEach((room) => {
+    if (room.id === lookupId) {
+      result = room
+    }
+  });
+  return result;
+}
+
 //This will broadcast messages to everyone connected
 wss.broadcast = (message) => {
   wss.clients.forEach((client) => {
@@ -84,15 +94,33 @@ wss.on('connection', (ws) => {
     initHost(ws);
   }
   ws.on('message', function incoming(message) {
-    console.log(ws.host)
     message = JSON.parse(message); //immedaitely parse the data to json
-    console.log("title", message.title);
-    console.log("artist", message.artist);
-    getVideosByArtistTitle(message.title, message.artist).then((id) => {
-        message.videoId = id;
-        console.log(message);
+      switch (message.type) {
+      case "incomingRequest":
+        getVideosByArtistTitle(message.title, message.artist).then((id) => {
+          message.videoId = id;
+          let currentRoom = lookupRoom(message.room_id)
+          currentRoom.queue.push(message)
+          message = {
+            type: "receivingRequest",
+            queue: currentRoom.queue
+          }
+          wss.broadcast(message);
+        });
+        break;
+      case "incomingSongChange":
+        let currentRoom = lookupRoom(message.room_id);
+        let { queue } = currentRoom;
+        let nextSong = queue.shift();
+        currentRoom.currentSong = nextSong;
+        message = {
+          type: "receivingSongChange",
+          currentSong: currentRoom.currentSong,
+          queue
+        }
         wss.broadcast(message);
-    });
+        break;
+      }
   })
 
   ws.on('error', (error) => {
