@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const SocketServer = require('ws');
 const fetch = require("node-fetch");
+const dotenv = require("dotenv").config();
 
 
 // Set the port to 3001
@@ -31,8 +32,9 @@ function getVideosByArtistTitle(artist, title) {
         return res.json();
     }).then(function(body) {
       let videoId = body.items[0].id.videoId;
-        console.log(videoId);
-        return videoId;
+      console.log(body);
+      console.log(videoId);
+      return videoId;
     });
 }
 ///////////////////////////////
