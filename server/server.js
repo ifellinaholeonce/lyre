@@ -1,6 +1,9 @@
+require('dotenv').config();
+
 const express = require('express');
 const SocketServer = require('ws');
 const fetch = require("node-fetch");
+
 
 // Set the port to 3001
 const PORT = 3001;
@@ -16,7 +19,7 @@ const wss = new SocketServer.Server({ server });
 
 // Function returns a promise that resolves to the videoId
 function getVideosByArtistTitle(artist, title) {
-  //const API_KEY = "process.env.API_KEY";
+  const API_KEY = process.env.API_KEY;
   let artistSerial = artist.split(" ").join("+");
   let titleSerial = title.split(" ").join("+");
   let response = "";
@@ -32,12 +35,29 @@ function getVideosByArtistTitle(artist, title) {
         return videoId;
     });
 }
+///////////////////////////////
+////////////ROOMS//////////////
+///////////////////////////////
+const rooms = [];
+//Initiate a new room
+const initRoom = (host) => {
+  const room = {
+    id: 1,
+    host,
+    guests: [],
+    currentSong: {},
+    queue: []
+  }
+  rooms.push(room);
+  return room.id
+}
 
 //Initiate the host - this assigns them id 1 so that only they render the video and other content
 const initHost = (host) => {
   let message = {
     type: "initHost",
-    content: 1
+    host: 1, //It is either 1 or 0. This is not an id number.
+    room_id: initRoom(host)
   }
   host.host = true
   console.log(host.host)

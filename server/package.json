@@ -11,5 +11,8 @@
   "dependencies": {
     "express": "4.16.2",
     "ws": "4.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^4.0.0"
   }
 }

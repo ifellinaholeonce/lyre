@@ -31,7 +31,8 @@ class App extends Component {
       switch (message.type) {
         case "initHost":
           this.setState({
-            host: message.content
+            host: message.host,
+            room_id: message.room_id
           })
           break;
         default:
