@@ -13,7 +13,7 @@ class App extends Component {
     this.state = {
       host: 0,
       room_id: "",
-      currentSong: {title: "Metanoya", artist: "MGMT", score: 3, videoId: "2g811Eo7K8U"},
+      currentSong: {},
       queue: []
     }
   }
@@ -21,9 +21,6 @@ class App extends Component {
   componentDidMount = () => {
     //Connect to server once the component mounts
     this.connection = new WebSocket("ws://127.0.0.1:3001");
-    this.connection.onopen = () => {
-      console.log("Connected to server as:", this.state.currentUser);
-    };
     this.connection.onmessage = (event) => {
       let message = JSON.parse(event.data);
       switch (message.type) {
