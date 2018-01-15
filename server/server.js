@@ -111,11 +111,25 @@ wss.on('connection', (ws) => {
       case "incomingRequest":
         getVideosByArtistTitle(message.title, message.artist).then((id) => {
           message.videoId = id;
-          let currentRoom = lookupRoom(message.room_id)
-          currentRoom.queue.push(message)
+          let currentRoom = lookupRoom(message.room_id);
+          let { queue } = currentRoom;
+          let { currentSong } = currentRoom;
+          queue.push(message);
           message = {
             type: "receivingRequest",
-            queue: currentRoom.queue
+            queue: queue
+          }
+          //CHECK IF THE CURRENT SONG IS EMPTY AND PUT A SONG IN THE CURRENT PLAYING IF IT IS
+          console.log(currentSong);
+          if (currentSong = {}) {
+            let nextSong = queue.shift();
+            currentRoom.currentSong = nextSong;
+            console.log(currentRoom.currentSong);
+            message = {
+              type: "receivingSongChange",
+              currentSong: currentRoom.currentSong,
+              queue
+            }
           }
           wss.broadcast(message);
         });
