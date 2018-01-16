@@ -92,7 +92,6 @@ const joinRoom = (user, room_id) => {
     queue: room.queue
   }
   rooms[room_id].guests.push(user)
-  console.log("sent", message)
   user.send(JSON.stringify(message));
 }
 
