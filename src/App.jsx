@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import CurrentPlaying from './CurrentPlaying.jsx';
 import Bar from './Bar.jsx';
 import Queue from './Queue.jsx';
-import NavBar from './NavBar.jsx'
+import NavBar from './NavBar.jsx';
+import Landing from './Landing.jsx';
 
 
 class App extends Component {
@@ -40,10 +41,28 @@ class App extends Component {
             currentSong: message.currentSong,
             queue: message.queue
           })
+          break;
+        case "receivingRoomJoin":
+          this.setState({
+            room_id: message.room_id,
+            currentSong: message.currentSong,
+            queue: message.queue
+          })
+          break;
         default:
           console.log("Unknown message")
+          console.log(message)
       }
     }
+  }
+
+  joinRoom = (requestedRoom) => {
+    let message = {
+      type: "incomingRoomJoin",
+      room_id: requestedRoom
+    }
+
+    this.connection.send(JSON.stringify(message))
   }
 
   sortQueue = () => {
@@ -141,23 +160,28 @@ class App extends Component {
     return (
       <div>
         <NavBar />
-        <CurrentPlaying
-          host={this.state.host}
-          like={this.like}
-          skip={this.skip}
-          currentSong={this.state.currentSong}
-          queue={this.state.queue}
-          nextSong={this.nextSong}
-        />
-        <Queue
-          queue={this.state.queue}
-          like={this.like}
-          skip={this.skip}
-        />
-        <Bar
-          makeRequest={this.makeRequest}
-        />
-
+        {this.state.room_id === "" &&
+         <Landing join={this.joinRoom}/>}
+        {this.state.room_id !== "" &&
+          <div>
+            <CurrentPlaying
+              host={this.state.host}
+              like={this.like}
+              skip={this.skip}
+              currentSong={this.state.currentSong}
+              queue={this.state.queue}
+              nextSong={this.nextSong}
+            />
+            <Queue
+              queue={this.state.queue}
+              like={this.like}
+              skip={this.skip}
+            />
+            <Bar
+              makeRequest={this.makeRequest}
+            />
+          </div>
+        }
       </div>
     );
   }

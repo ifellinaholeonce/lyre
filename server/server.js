@@ -31,7 +31,6 @@ function getVideosByArtistTitle(artist, title) {
         return res.json();
     }).then(function(body) {
       let videoId = body.items[0].id.videoId;
-        console.log(videoId);
         return videoId;
     });
 }
@@ -50,18 +49,22 @@ let generateRandomString = (length, chars) => {
 ///////////////////////////////
 ////////////ROOMS//////////////
 ///////////////////////////////
-const rooms = [];
+let rooms = {};
+
 //Initiate a new room
 const initRoom = (host) => {
+  let room_id = generateRandomString(6, 'aA#');
   const room = {
-    id: generateRandomString(6, 'aA#'),
-    host,
-    guests: [],
-    currentSong: {},
-    queue: []
+    [room_id] :{
+      room_id,
+      guests: [],
+      currentSong: {},
+      queue: []
+    }
   }
-  rooms.push(room);
-  return room.id
+
+  rooms = Object.assign(rooms, room);
+  return room_id
 }
 
 //Initiate the host - this assigns them id 1 so that only they render the video and other content
@@ -71,20 +74,22 @@ const initHost = (host) => {
     host: 1, //It is either 1 or 0. This is not an id number.
     room_id: initRoom(host)
   }
-  host.host = true
-  console.log(host.host)
-  console.log("sending", message)
   host.send(JSON.stringify(message))
 }
 
 const lookupRoom = (lookupId) => {
-  let result = {}
-  rooms.forEach((room) => {
-    if (room.id === lookupId) {
-      result = room
-    }
-  });
+  let result = rooms[lookupId]
+  //if resuslt is still empty should throw an error
   return result;
+}
+
+const joinRoom = (user, room_id) => {
+  let room = lookupRoom(room_id)
+  let message = {
+    type: "recevingRoomJoin",
+    room
+  }
+  user.send(JSON.stringify(message));
 }
 
 //This will broadcast messages to everyone connected
@@ -109,26 +114,28 @@ wss.on('connection', (ws) => {
     message = JSON.parse(message); //immedaitely parse the data to json
       switch (message.type) {
       case "incomingRequest":
+      console.log("#####INCOMINGSONGCHANGE#####")
         getVideosByArtistTitle(message.title, message.artist).then((id) => {
           message.videoId = id;
-          let currentRoom = lookupRoom(message.room_id);
-          let { queue } = currentRoom;
+          let currentRoom = rooms[message.room_id];
           let { currentSong } = currentRoom;
-          queue.push(message);
-          message = {
-            type: "receivingRequest",
-            queue: queue
-          }
+          delete message.type
+          rooms[message.room_id].queue.push(message);
+          console.log("song", rooms[message.room_id].currentSong)
           //CHECK IF THE CURRENT SONG IS EMPTY AND PUT A SONG IN THE CURRENT PLAYING IF IT IS
-          console.log(currentSong);
-          if (currentSong = {}) {
-            let nextSong = queue.shift();
-            currentRoom.currentSong = nextSong;
-            console.log(currentRoom.currentSong);
+          if (Object.keys(rooms[message.room_id].currentSong).length === 0) {
+            console.log("current song is empty")
+            let nextSong = rooms[message.room_id].queue.shift();
+            rooms[message.room_id].currentSong = nextSong;
             message = {
               type: "receivingSongChange",
-              currentSong: currentRoom.currentSong,
-              queue
+              currentSong: rooms[message.room_id].currentSong,
+              queue: rooms[message.room_id].queue
+            }
+          } else {
+            message = {
+              type: "receivingRequest",
+              queue: rooms[message.room_id].queue
             }
           }
           wss.broadcast(message);
@@ -146,6 +153,9 @@ wss.on('connection', (ws) => {
         }
         wss.broadcast(message);
         break;
+      case "incomingRoomJoin":
+        let { room_id } = message;
+        joinRoom(ws, room_id);
       }
   })
 
