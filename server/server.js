@@ -57,7 +57,7 @@ const initRoom = (host) => {
   const room = {
     [room_id] :{
       room_id,
-      guests: [],
+      guests: [host],
       currentSong: {},
       queue: []
     }
@@ -91,13 +91,14 @@ const joinRoom = (user, room_id) => {
     currentSong: room.currentSong,
     queue: room.queue
   }
+  rooms[room_id].guests.push(user)
   console.log("sent", message)
   user.send(JSON.stringify(message));
 }
 
 //This will broadcast messages to everyone connected
-wss.broadcast = (message) => {
-  wss.clients.forEach((client) => {
+wss.broadcast = (message, guests) => {
+  guests.forEach((client) => {
     if (client.readyState === SocketServer.OPEN){ //check that the websocket connection is open
       data = JSON.stringify(message); //stringify the data
       client.send(data);
@@ -137,7 +138,7 @@ wss.on('connection', (ws) => {
               queue: rooms[message.room_id].queue
             }
           }
-          wss.broadcast(response);
+          wss.broadcast(response, rooms[message.room_id].guests);
         });
         break;
       case "incomingSongChange":
