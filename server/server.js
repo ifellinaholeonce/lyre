@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const SocketServer = require('ws');
 const fetch = require("node-fetch");
+const dotenv = require("dotenv").config();
 
 
 // Set the port to 3001
