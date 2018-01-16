@@ -142,16 +142,17 @@ wss.on('connection', (ws) => {
         });
         break;
       case "incomingSongChange":
+        console.log(message)
         let currentRoom = lookupRoom(message.room_id);
         let { queue } = currentRoom;
         let nextSong = queue.shift();
         currentRoom.currentSong = nextSong;
-        message = {
+        response = {
           type: "receivingSongChange",
           currentSong: currentRoom.currentSong,
           queue
         }
-        wss.broadcast(message);
+        wss.broadcast(response, rooms[message.room_id].guests);
         break;
       case "incomingRoomJoin":
         console.log("Joining room", message.room_id)
