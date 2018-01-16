@@ -21,20 +21,19 @@ class Landing extends Component {
     this.props.join(room_id)
   }
 
-  //ONCLICK from HOST should create room and display ID
   render() {
     return (
       <div className="landing">
         {!(this.state.joinForm) && !(this.state.hostForm) &&
           [<h1 key='title'>Welcome</h1>,
           <button key='joinButton' onClick={this.showJoinForm}>Join The Party</button>,
-          <button key='hostButton'>Host</button>]
+          <button key='hostButton' onClick={this.props.host}>Host</button>]
         }
         {(this.state.joinForm) &&
           <form onSubmit={this.joinRoom}>
             <label>Room:</label>
             <textarea name='room_id'></textarea>
-            <input type='submit' value='join' />
+            <input type='submit' value='Join' />
           </form>
         }
       </div>

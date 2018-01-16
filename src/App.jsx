@@ -57,6 +57,13 @@ class App extends Component {
     }
   }
 
+  hostRoom = () => {
+    let message = {
+      type: "initHost"
+    }
+    this.connection.send(JSON.stringify(message))
+  }
+
   joinRoom = (requestedRoom) => {
     let message = {
       type: "incomingRoomJoin",
@@ -160,9 +167,9 @@ class App extends Component {
   render() {
     return (
       <div>
-        <NavBar />
+        <NavBar room_id={this.state.room_id}/>
         {this.state.room_id === "" &&
-         <Landing join={this.joinRoom}/>}
+         <Landing join={this.joinRoom} host={this.hostRoom}/>}
         {this.state.room_id !== "" &&
           <div>
             <CurrentPlaying

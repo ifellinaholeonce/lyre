@@ -109,14 +109,14 @@ wss.broadcast = (message) => {
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected');
-  if (wss.clients.size === 1) {
-    initHost(ws);
-  }
   ws.on('message', function incoming(message) {
     message = JSON.parse(message); //immedaitely parse the data to json
+    console.log("message", message)
       switch (message.type) {
+      case "initHost":
+        initHost(ws);
+        break;
       case "incomingRequest":
-      console.log("message", message)
         getVideosByArtistTitle(message.title, message.artist).then((id) => {
           message.videoId = id;
           let currentRoom = rooms[message.room_id];
@@ -156,6 +156,7 @@ wss.on('connection', (ws) => {
         console.log("Joining room", message.room_id)
         let { room_id } = message;
         joinRoom(ws, room_id);
+        break;
       }
   })
 
