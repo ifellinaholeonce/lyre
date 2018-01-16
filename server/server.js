@@ -86,9 +86,12 @@ const lookupRoom = (lookupId) => {
 const joinRoom = (user, room_id) => {
   let room = lookupRoom(room_id)
   let message = {
-    type: "recevingRoomJoin",
-    room
+    type: "receivingRoomJoin",
+    room_id: room.room_id,
+    currentSong: room.currentSong,
+    queue: room.queue
   }
+  console.log("sent", message)
   user.send(JSON.stringify(message));
 }
 
@@ -98,7 +101,6 @@ wss.broadcast = (message) => {
     if (client.readyState === SocketServer.OPEN){ //check that the websocket connection is open
       data = JSON.stringify(message); //stringify the data
       client.send(data);
-      console.log(data);
     }
   })
 }
@@ -114,31 +116,28 @@ wss.on('connection', (ws) => {
     message = JSON.parse(message); //immedaitely parse the data to json
       switch (message.type) {
       case "incomingRequest":
-      console.log("#####INCOMINGSONGCHANGE#####")
+      console.log("message", message)
         getVideosByArtistTitle(message.title, message.artist).then((id) => {
           message.videoId = id;
           let currentRoom = rooms[message.room_id];
           let { currentSong } = currentRoom;
           delete message.type
           rooms[message.room_id].queue.push(message);
-          console.log("song", rooms[message.room_id].currentSong)
           //CHECK IF THE CURRENT SONG IS EMPTY AND PUT A SONG IN THE CURRENT PLAYING IF IT IS
           if (Object.keys(rooms[message.room_id].currentSong).length === 0) {
-            console.log("current song is empty")
-            let nextSong = rooms[message.room_id].queue.shift();
-            rooms[message.room_id].currentSong = nextSong;
-            message = {
+            rooms[message.room_id].currentSong = rooms[message.room_id].queue.shift();
+            response = {
               type: "receivingSongChange",
               currentSong: rooms[message.room_id].currentSong,
               queue: rooms[message.room_id].queue
             }
           } else {
-            message = {
+            response = {
               type: "receivingRequest",
               queue: rooms[message.room_id].queue
             }
           }
-          wss.broadcast(message);
+          wss.broadcast(response);
         });
         break;
       case "incomingSongChange":
@@ -154,6 +153,7 @@ wss.on('connection', (ws) => {
         wss.broadcast(message);
         break;
       case "incomingRoomJoin":
+        console.log("Joining room", message.room_id)
         let { room_id } = message;
         joinRoom(ws, room_id);
       }

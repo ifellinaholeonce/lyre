@@ -43,6 +43,7 @@ class App extends Component {
           })
           break;
         case "receivingRoomJoin":
+        console.log(message)
           this.setState({
             room_id: message.room_id,
             currentSong: message.currentSong,
@@ -51,7 +52,7 @@ class App extends Component {
           break;
         default:
           console.log("Unknown message")
-          console.log(message)
+          console.log(message.type)
       }
     }
   }
