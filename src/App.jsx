@@ -83,11 +83,6 @@ class App extends Component {
   }
 
   nextSong = () => {
-    //TAKE SONG WITH MOST VOTES FROM QUEUE AND SET TO CURRENT SONG
-    //Get song with most votes from queue
-    let { queue } = this.state;
-    let nextSong = queue.shift();
-
     let message = {
       type: "incomingSongChange",
       room_id: this.state.room_id,
@@ -98,31 +93,24 @@ class App extends Component {
   }
 
 //VOTING FOR SONGS - Might want to change to a switch case?
-  like = (song) => {
-    let { title } = song;
-    if (title === this.state.currentSong.title) {
-      let newScore = this.state.currentSong.score + 1;
-      let { currentSong } = this.state;
-      currentSong.score = newScore;
-      currentSong.liked = true;
-      this.setState({
-        currentSong
-      });
-    } else {
-      this.state.queue.forEach((track, i) => {
-        if (title === track.title) {
-          let { queue } = this.state;
-          let newScore = track.score + 1;
-          queue[i].score = newScore;
-          queue[i].liked = true;
-        }
-      })
-      this.sortQueue();
-      this.setState({
-        queue
-      })
+  upVoteCurrentSong = (song) => {
+    let message = {
+      type: "upVoteCurrentSong",
+      song,
+      room_id: this.state.room_id
     }
+    this.connection.send(JSON.stringify(message))
   }
+  upVoteQueueSong = (song) => {
+    let message = {
+      type: "upVoteQueueSong",
+      song,
+      room_id: this.state.room_id
+    }
+    this.connection.send(JSON.stringify(message))
+  }
+
+
 
   skip = (song) => {
     let { title } = song;
@@ -174,7 +162,7 @@ class App extends Component {
           <div>
             <CurrentPlaying
               host={this.state.host}
-              like={this.like}
+              like={this.upVoteCurrentSong}
               skip={this.skip}
               currentSong={this.state.currentSong}
               queue={this.state.queue}
@@ -182,7 +170,7 @@ class App extends Component {
             />
             <Queue
               queue={this.state.queue}
-              like={this.like}
+              like={this.upVoteQueueSong}
               skip={this.skip}
             />
             <Bar

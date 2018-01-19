@@ -142,7 +142,6 @@ wss.on('connection', (ws) => {
         });
         break;
       case "incomingSongChange":
-        console.log(message)
         let currentRoom = lookupRoom(message.room_id);
         let { queue } = currentRoom;
         let nextSong = queue.shift();
@@ -159,7 +158,18 @@ wss.on('connection', (ws) => {
         let { room_id } = message;
         joinRoom(ws, room_id);
         break;
+      case "upVoteQueueSong":
+        console.log("upVoteQueueSong", message)
+        currentRoom = lookupRoom(message.room_id);
+        queue = currentRoom.queue;
+        queue.forEach((song) => {
+          if (message.song.name === song.name) { //should probably user underscore's deep equal here
+            song.score++;
+          }
+        })
+        break;
       }
+
   })
 
   ws.on('error', (error) => {
