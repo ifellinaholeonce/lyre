@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css?family=Oswald:500|Raleway:400i');
+
+$tier-one-background: url("https://upload.wikimedia.org/wikipedia/commons/3/31/PyramidM.JPG");
+
+@mixin primary-font() {
+  font-family: 'Oswald', sans-serif;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
+}
+@mixin secondary-font() {
+  font-family: 'Raleway', sans-serif;
+  font-style: italic;
+}
+
+
+.landing {
+  color: white;
+  text-align: center;
+
+  form {
+    margin-top: 25vh;
+  }
+
+  .first-tier {
+    background-image: $tier-one-background;
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    height: 80vh;
+    width: 100vw;
+    border-bottom: 1px solid black;
+    z-index: -1;
+  }
+
+  .btn {
+    border: 2px solid red;
+    padding: 10px;
+    border-radius: 25px;
+  }
+
+  .btn-success   {
+    background-color: lighten(green, 10);
+  }
+
+  .title {
+    @include primary-font();
+    font-size: 5em;
+    margin-top: 25vh;
+    margin-bottom: 0;
+  }
+
+  .subtitle {
+    @include secondary-font();
+    font-size: 2em;
+    margin-top: 0;
+  }
+
+  .btn {
+    margin: 10px;
+  }
+  .btn-secondary {
+    background-color: clear;
+  }
+}

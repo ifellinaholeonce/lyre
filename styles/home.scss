@@ -1,10 +1,12 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700");
 @import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css");
+@import url('https://fonts.googleapis.com/css?family=Oswald:500|Raleway:400i');
+
 
 body {
   background: skyblue;
   color: black;
-  font-family: 'Open Sans', sans-serif;
+  font-family: sans-serif;
   font-size: 14px;
   margin: 70px 0;
 }
@@ -70,13 +72,13 @@ body {
   background: darkblue;
   border-bottom: 1px solid black;
   color: white;
-  font-family:sans-serif;
-  height: 60px;
+  height: 5vh;
   left: 0;
   padding: 0 10px;
   position: fixed;
   right: 0;
   top: 0;
+  z-index: 1;
 }
 
 .navbar-brand {
@@ -85,8 +87,8 @@ body {
   float: left;
   font-weight: 700;
   font-size: 28px;
-  height: 60px;
-  line-height: 60px;
+  height: 5vh;
+  line-height: 5vh;
   padding: 0 10px;
   text-decoration: none;
 }

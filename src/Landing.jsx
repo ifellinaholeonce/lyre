@@ -24,10 +24,12 @@ class Landing extends Component {
   render() {
     return (
       <div className="landing">
+        <div className="first-tier">
         {!(this.state.joinForm) && !(this.state.hostForm) &&
-          [<h1 key='title'>Welcome</h1>,
-          <button key='joinButton' onClick={this.showJoinForm}>Join The Party</button>,
-          <button key='hostButton' onClick={this.props.host}>Host</button>]
+          [<h1 className="title" key='title'>Lyre</h1>,
+          <p className="subtitle" key="subtitle">Democratize Your Party's Playlist</p>,
+          <button className="btn btn-success" key='joinButton' onClick={this.showJoinForm}>Join The Party</button>,
+          <button className="btn btn-secondary" key='hostButton' onClick={this.props.host}>Host</button>]
         }
         {(this.state.joinForm) &&
           <form onSubmit={this.joinRoom}>
@@ -36,6 +38,12 @@ class Landing extends Component {
             <input type='submit' value='Join' />
           </form>
         }
+        </div>
+        <div className="second-tier">
+          <div className="col" id="col1"></div>
+          <div className="col" id="col2"></div>
+          <div className="col" id="col3"></div>
+        </div>
       </div>
     );
   }
