@@ -2,9 +2,9 @@ require('dotenv').config();
 
 const express = require('express');
 const SocketServer = require('ws');
-const fetch = require("node-fetch");
-const dotenv = require("dotenv").config();
-
+const dotenv = require('dotenv').config();
+const youtube = require('./youtube.js');
+const utils = require('./utils.js');
 
 // Set the port to 3001
 const PORT = 3001;
@@ -18,35 +18,6 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer.Server({ server });
 
-// Function returns a promise that resolves to the videoId
-function getVideosByArtistTitle(artist, title) {
-  const API_KEY = process.env.API_KEY;
-  let artistSerial = artist.split(" ").join("+");
-  let titleSerial = title.split(" ").join("+");
-  let response = "";
-
-  let path = `https://www.googleapis.com/youtube/v3/search?maxResults=1&part=snippet&q=${artistSerial}+${titleSerial}&key=${API_KEY}`;
-
-  return fetch(path)
-    .then(function(res) {
-        return res.json();
-    }).then(function(body) {
-      let videoId = body.items[0].id.videoId;
-        return videoId;
-    });
-}
-// Function generates a random alpha numeric string, with specified length
-let generateRandomString = (length, chars) => {
-  let mask = '';
-  if (chars.indexOf('a') > -1) mask += 'abcdefghijklmnopqrstuvwxyz';
-  if (chars.indexOf('A') > -1) mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  if (chars.indexOf('#') > -1) mask += '0123456789';
-  let result = '';
-  for (let i = length; i > 0; --i) {
-    result += mask[Math.round(Math.random() * (mask.length - 1))];
-  }
-  return result;
-};
 ///////////////////////////////
 ////////////ROOMS//////////////
 ///////////////////////////////
@@ -54,7 +25,7 @@ let rooms = {};
 
 //Initiate a new room
 const initRoom = (host) => {
-  let room_id = generateRandomString(6, 'aA#');
+  let room_id = utils.generateRandomString(6, 'aA#');
   const room = {
     [room_id] :{
       room_id,
@@ -65,7 +36,18 @@ const initRoom = (host) => {
   }
 
   rooms = Object.assign(rooms, room);
-  return room_id
+  return room_id;
+}
+
+const joinRoom = (user, room) => {
+  let message = {
+    type: "receivingRoomJoin",
+    room_id: room.room_id,
+    currentSong: room.currentSong,
+    queue: room.queue
+  }
+  rooms[room.room_id].guests.push(user)
+  user.send(JSON.stringify(message));
 }
 
 //Initiate the host - this assigns them id 1 so that only they render the video and other content
@@ -76,24 +58,6 @@ const initHost = (host) => {
     room_id: initRoom(host)
   }
   host.send(JSON.stringify(message))
-}
-
-const lookupRoom = (lookupId) => {
-  let result = rooms[lookupId]
-  //if resuslt is still empty should throw an error
-  return result;
-}
-
-const joinRoom = (user, room_id) => {
-  let room = lookupRoom(room_id)
-  let message = {
-    type: "receivingRoomJoin",
-    room_id: room.room_id,
-    currentSong: room.currentSong,
-    queue: room.queue
-  }
-  rooms[room_id].guests.push(user)
-  user.send(JSON.stringify(message));
 }
 
 //This will broadcast messages to everyone connected
@@ -118,14 +82,13 @@ wss.on('connection', (ws) => {
         initHost(ws);
         break;
       case "incomingRequest":
-        getVideosByArtistTitle(message.title, message.artist).then((id) => {
+        youtube.getVideosByArtistTitle(message.title, message.artist).then((id) => {
           message.videoId = id;
           let currentRoom = rooms[message.room_id];
           let { currentSong } = currentRoom;
-          delete message.type
           rooms[message.room_id].queue.push(message);
           //CHECK IF THE CURRENT SONG IS EMPTY AND PUT A SONG IN THE CURRENT PLAYING IF IT IS
-          if (Object.keys(rooms[message.room_id].currentSong).length === 0) {
+          if (Object.keys(rooms[message.room_id].currentSong).length === 0) { //Should probably replace with underscore module's deep equals
             rooms[message.room_id].currentSong = rooms[message.room_id].queue.shift();
             response = {
               type: "receivingSongChange",
@@ -142,7 +105,8 @@ wss.on('connection', (ws) => {
         });
         break;
       case "incomingSongChange":
-        let currentRoom = lookupRoom(message.room_id);
+        console.log("Incoming Song Change", message)
+        let currentRoom = rooms[message.room_id];
         let { queue } = currentRoom;
         let nextSong = queue.shift();
         currentRoom.currentSong = nextSong;
@@ -156,11 +120,11 @@ wss.on('connection', (ws) => {
       case "incomingRoomJoin":
         console.log("Joining room", message.room_id)
         let { room_id } = message;
-        joinRoom(ws, room_id);
+        joinRoom(ws, rooms[room_id]);
         break;
       case "upVoteQueueSong":
         console.log("upVoteQueueSong", message)
-        currentRoom = lookupRoom(message.room_id);
+        currentRoom = rooms[message.room_id];
         queue = currentRoom.queue;
         queue.forEach((song) => {
           if (message.song.name === song.name) { //should probably user underscore's deep equal here
