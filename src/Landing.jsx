@@ -35,14 +35,17 @@ class Landing extends Component {
           <form onSubmit={this.joinRoom}>
             <label>Room:</label>
             <textarea name='room_id'></textarea>
-            <input type='submit' value='Join' />
+            <input className="btn btn-primary" type='submit' value='Join' />
           </form>
         }
         </div>
         <div className="second-tier">
-          <div className="col" id="col1"></div>
-          <div className="col" id="col2"></div>
-          <div className="col" id="col3"></div>
+          <div className="col" id="col1">
+            <div className="box half-box">HOST</div>
+          </div>
+          <div className="col" id="col2">
+            <div className="box half-box">JOIN</div>
+          </div>
         </div>
       </div>
     );
