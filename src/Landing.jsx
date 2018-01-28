@@ -26,10 +26,10 @@ class Landing extends Component {
       <div className="landing">
         <div className="first-tier">
         {!(this.state.joinForm) && !(this.state.hostForm) &&
-          [<h1 className="title" key='title'>Lyre</h1>,
-          <p className="subtitle" key="subtitle">Democratize Your Party's Playlist</p>,
-          <button className="btn btn-success" key='joinButton' onClick={this.showJoinForm}>Join The Party</button>,
-          <button className="btn btn-secondary" key='hostButton' onClick={this.props.host}>Host</button>]
+          [<h1 className="title fade-in one" key='title'>lyre .</h1>,
+          <p className="subtitle fade-in two" key="subtitle">Democratize Your Party's Playlist</p>,
+          <button className="btn btn-primary fade-in three" key='hostButton' onClick={this.props.host}>HOST THE PARTY</button>,
+          <button className="btn btn-alternate fade-in three" key='joinButton' onClick={this.showJoinForm}>JOIN THE PARTY</button>]
         }
         {(this.state.joinForm) &&
           <form onSubmit={this.joinRoom}>
