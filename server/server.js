@@ -113,6 +113,7 @@ wss.on('connection', (ws) => {
   ws.on('message', function incoming(message) {
     message = JSON.parse(message); //immedaitely parse the data to json
     console.log("message", message)
+    let queueRoom;
       switch (message.type) {
       case "initHost":
         initHost(ws);
@@ -159,15 +160,31 @@ wss.on('connection', (ws) => {
         joinRoom(ws, room_id);
         break;
       case "upVoteQueueSong":
-        console.log("upVoteQueueSong", message)
-        currentRoom = lookupRoom(message.room_id);
-        queue = currentRoom.queue;
-        queue.forEach((song) => {
+        queueRoom = lookupRoom(message.room_id);
+        queueRoom.queue.forEach((song) => {
           if (message.song.name === song.name) { //should probably user underscore's deep equal here
             song.score++;
           }
-        })
+        });
+        response = {
+          type: "receivingQueueVotes",
+          queue: queueRoom.queue
+        }
+        wss.broadcast(response, rooms[message.room_id].guests)
         break;
+        case "downVoteQueueSong":
+          queueRoom = lookupRoom(message.room_id);
+          queueRoom.queue.forEach((song) => {
+            if (message.song.name === song.name) { //should probably user underscore's deep equal here
+              song.score--;
+            }
+          });
+          response = {
+            type: "receivingQueueVotes",
+            queue: queueRoom.queue
+          }
+          wss.broadcast(response, rooms[message.room_id].guests)
+          break;
       }
 
   })

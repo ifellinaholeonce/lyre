@@ -43,13 +43,16 @@ class App extends Component {
           })
           break;
         case "receivingRoomJoin":
-        console.log(message)
           this.setState({
             room_id: message.room_id,
             currentSong: message.currentSong,
             queue: message.queue
           })
           break;
+        case "receivingQueueVotes":
+          this.setState({
+            queue: message.queue
+          })
         default:
           console.log("Unknown message")
           console.log(message.type)
@@ -110,6 +113,14 @@ class App extends Component {
     this.connection.send(JSON.stringify(message))
   }
 
+  downVoteQueueSong = (song) => {
+    let message = {
+      type: "downVoteQueueSong",
+      song,
+      room_id: this.state.room_id
+    }
+    this.connection.send(JSON.stringify(message))
+  }
 
 
   skip = (song) => {
@@ -171,7 +182,7 @@ class App extends Component {
             <Queue
               queue={this.state.queue}
               like={this.upVoteQueueSong}
-              skip={this.skip}
+              skip={this.downVoteQueueSong}
             />
             <Bar
               makeRequest={this.makeRequest}
