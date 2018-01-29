@@ -25,19 +25,19 @@ class Landing extends Component {
     return (
       <div className="landing">
         <div className="first-tier">
-        {!(this.state.joinForm) && !(this.state.hostForm) &&
-          [<h1 className="title fade-in one" key='title'>lyre .</h1>,
-          <p className="subtitle fade-in two" key="subtitle">Democratize Your Party's Playlist</p>,
-          <button className="btn btn-primary fade-in three" key='hostButton' onClick={this.props.host}>HOST THE PARTY</button>,
-          <button className="btn btn-alternate fade-in three" key='joinButton' onClick={this.showJoinForm}>JOIN THE PARTY</button>]
-        }
-        {(this.state.joinForm) &&
-          <form onSubmit={this.joinRoom}>
-            <label>Room:</label>
-            <textarea name='room_id'></textarea>
-            <input className="btn btn-primary" type='submit' value='Join' />
-          </form>
-        }
+          {!(this.state.joinForm) && !(this.state.hostForm) &&
+            [<h1 className="title fade-in one" key='title'>lyre .</h1>,
+            <p className="subtitle fade-in two" key="subtitle">Democratize Your Party's Playlist</p>,
+            <button className="btn btn-primary fade-in three" key='hostButton' onClick={this.props.host}>HOST THE PARTY</button>,
+            <button className="btn btn-alternate fade-in three" key='joinButton' onClick={this.showJoinForm}>JOIN THE PARTY</button>]
+          }
+          {(this.state.joinForm) &&
+            <form onSubmit={this.joinRoom}>
+              <label for="room_id">Room:</label>
+              <textarea name='room_id'></textarea>
+              <input className="btn btn-primary" type='submit' value='Join' />
+            </form>
+          }
         </div>
         <div className="second-tier">
           <div className="col" id="col1">

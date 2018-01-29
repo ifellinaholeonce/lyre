@@ -56,17 +56,31 @@ $tier-one-background: url("../img/landing-bg2.JPG");
 
   form {
     margin-top: 25vh;
+
+    label {
+      @include primary-font();
+      font-size: 4em;
+      display: block;
+    }
+
+    textarea {
+      display: block;
+      margin: 15px 0;
+      margin-left: auto;
+      margin-right: auto;
+      resize: none;
+    }
   }
 
   .first-tier {
     background-image: $tier-one-background;
     background-size: cover;
     position: absolute;
+    display: block;
     top: 0;
     height: 80vh;
     width: 100vw;
     border-bottom: 1px solid black;
-    z-index: -1;
   }
 
   .btn {
@@ -112,4 +126,10 @@ $tier-one-background: url("../img/landing-bg2.JPG");
     font-size: 2em;
   }
 
+  .second-tier {
+    color: black;
+    position: fixed;
+    top: 80vh;
+    display: inline-block;
+  }
 }
