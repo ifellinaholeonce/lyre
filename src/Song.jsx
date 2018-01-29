@@ -25,11 +25,11 @@ class CurrentPlaying extends Component {
         <div>
           <span>Vote: </span>
           {!(this.props.song.liked) &&
-             <button onClick={this.like}>Like</button>
+             <button className="btn btn-like" onClick={this.like}>Like</button>
           }
           {this.props.song.liked === null && <span>|</span>}
           {!(this.props.song.liked === false) &&
-             <button onClick={this.skip}>Skip</button>
+             <button className="btn btn-skip" onClick={this.skip}>Skip</button>
           }
           <h3>{this.props.song.score}</h3>
         </div>

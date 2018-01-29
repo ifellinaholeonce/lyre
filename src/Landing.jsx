@@ -65,6 +65,11 @@ class Landing extends Component {
             </div>
           </div>
         </div>
+        <div className="third-tier">
+          <p>
+            Aliquam erat volutpat. Duis ex ligula, finibus sed sollicitudin quis, viverra non ligula. Vestibulum maximus metus vitae nisl hendrerit imperdiet. Mauris in gravida tortor. Morbi dictum nunc nibh, eget vehicula sem maximus non. Duis elementum mauris libero, non aliquam sapien mattis non. In hac habitasse platea dictumst.
+          </p>
+        </div>
       </div>
     );
   }

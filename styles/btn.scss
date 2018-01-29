@@ -1,0 +1,23 @@
+.btn {
+  transition: all 0.5s ease;
+  letter-spacing: 2px;
+  border: 1px solid black;
+  padding: 10px 30px;
+  border-radius: 25px;
+  margin: 10px 30px;
+  cursor: pointer;
+
+}
+
+.btn-like {
+  background-color: #FD930B;
+}
+
+.btn-skip {
+  background-color: #AA4000;
+}
+
+.btn-request {
+  background-color: lighten(green, 15);
+  margin: 0 10px;
+}

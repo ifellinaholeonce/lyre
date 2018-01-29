@@ -159,7 +159,7 @@ class App extends Component {
         {this.state.room_id === "" &&
          <Landing join={this.joinRoom} host={this.hostRoom}/>}
         {this.state.room_id !== "" &&
-          <div>
+          <div className="room-view">
             <CurrentPlaying
               host={this.state.host}
               like={this.upVoteCurrentSong}

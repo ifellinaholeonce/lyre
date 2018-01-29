@@ -84,16 +84,6 @@ $tier-one-background: url("../img/landing-bg2.JPG");
     border-bottom: 1px solid black;
   }
 
-  .btn {
-    transition: all 0.5s ease;
-    letter-spacing: 2px;
-    border: 1px solid black;
-    padding: 10px 30px;
-    border-radius: 25px;
-    margin: 10px 30px;
-    cursor: pointer;
-  }
-
   .btn-primary {
     color: white;
     background-color: #FD930B;
@@ -132,6 +122,7 @@ $tier-one-background: url("../img/landing-bg2.JPG");
     position: absolute;
     top: 90vh;
     left: 0;
+    height: 40vh;
     width: 100vw;
     max-width: 100%;
     display: inline-flex;
@@ -151,21 +142,32 @@ $tier-one-background: url("../img/landing-bg2.JPG");
         width: 40vw;
       }
 
-    &.landing-description {
-      height: 35vh;
+      &.landing-description {
+        height: 35vh;
 
-      h1.landing-description-title {
-        @include primary-font();
-        text-decoration: underline;
-      }
+        h1.landing-description-title {
+          @include primary-font();
+          text-decoration: underline;
+        }
 
-      li {
-        @include secondary-font();
-        text-align:left;
-        margin: 2vw;
+        li {
+          @include secondary-font();
+          text-align:left;
+          margin: 2vw;
+        }
       }
     }
+  } //Second Tier
 
+  .third-tier {
+    background-color: #8A4100;
+    height: 100vh;
+    position: absolute;
+    top: 130vh;
+    padding: 10vh;
+
+    p {
+      @include secondary-font();
     }
   }
 }

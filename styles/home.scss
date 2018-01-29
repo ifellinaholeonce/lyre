@@ -2,42 +2,44 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css");
 @import url('https://fonts.googleapis.com/css?family=Oswald:500|Raleway:400i');
 
+
 .requestbar {
-  background: complement(darkblue);
+  background: #8A4100;
   border-top: 1px solid black;
-  bottom: 0;
   display: flex;
-  left: 0;
+  height: 5vh;
   padding: 5px;
   position: fixed;
+  bottom: 0;
   right: 0;
+  left: 0;
+
+  form {
+    color: white;
+    margin: 1vh;
+    letter-spacing: 2px;
+    margin-left: auto;
+    margin-right: auto;
+
+    label {
+      margin: 10px;
+    }
+  }
 }
 
-.requestbar-artist,
-.requestbar-title {
-  border: 1px solid black;
-  display: block;
-  height: 40px;
-  line-height: 40px;
-  margin: 5px;
-  padding: 0 9px;
-}
-
-.requestbar-artist {
-  flex: 8;
-}
-
-.requestbar-title {
-  flex: 2;
+.room-view {
+  background-color: complement(#8A4100);
+  height: 95vh;
 }
 
 .currentplaying {
   display: block;
   text-align: center;
-  padding: 5px;
+  padding-top: 10vh;
 }
 
 .queue {
+  background-color: complement(#8A4100);
   display: block;
   text-align: center;
   padding: 5px;
