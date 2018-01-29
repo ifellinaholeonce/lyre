@@ -39,12 +39,30 @@ class Landing extends Component {
             </form>
           }
         </div>
-        <div className="second-tier">
+        <div className="second-tier fade-in three">
           <div className="col" id="col1">
-            <div className="box half-box">HOST</div>
+            <div className="box half-box landing-description">
+              <h1 className="landing-description-title">HOST</h1>
+              <ul>
+                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+                <li>Proin vitae sapien sed sem finibus egestas.</li>
+                <li>Morbi blandit nunc quis urna rutrum fermentum.</li>
+                <li>Nullam non ipsum quis dui mattis luctus.</li>
+                <li>Cras consectetur leo vitae turpis fringilla euismod eget a dolor.</li>
+              </ul>
+            </div>
           </div>
           <div className="col" id="col2">
-            <div className="box half-box">JOIN</div>
+            <div className="box half-box landing-description">
+              <h1 className="landing-description-title">JOIN</h1>
+              <ul>
+                <li>Nam id nisl quis leo dignissim ultrices.</li>
+                <li>Quisque et dui a eros cursus suscipit nec a justo.</li>
+                <li>Nunc consectetur ligula non venenatis egestas.</li>
+                <li>Vivamus vel nisi et ante faucibus consectetur.</li>
+                <li>Sed sit amet eros id nisl mattis rutrum.</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
