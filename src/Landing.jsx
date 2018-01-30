@@ -42,7 +42,7 @@ class Landing extends Component {
         <div className="second-tier fade-in three">
           <div className="col" id="col1">
             <div className="box half-box landing-description">
-              <h1 className="landing-description-title">HOST</h1>
+              <h1 className="landing-description-title">Host</h1>
               <ul>
                 <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
                 <li>Proin vitae sapien sed sem finibus egestas.</li>
@@ -54,7 +54,7 @@ class Landing extends Component {
           </div>
           <div className="col" id="col2">
             <div className="box half-box landing-description">
-              <h1 className="landing-description-title">JOIN</h1>
+              <h1 className="landing-description-title">Join</h1>
               <ul>
                 <li>Nam id nisl quis leo dignissim ultrices.</li>
                 <li>Quisque et dui a eros cursus suscipit nec a justo.</li>
